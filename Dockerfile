@@ -2,25 +2,26 @@
 FROM node:18.20.4-alpine3.20 as nodemodule
 WORKDIR /app
 
+# Install git
+RUN apk update && apk add git
+
 # Copy package files
 COPY package.json package-lock.json ./
 
-COPY . .
+# GIT INIT
+RUN git init
 
 # PULL GIT SUBMODULES, LƯU Ý CÁI NÀY QUAN TRỌNG
 RUN git submodule update --init --recursive
 
-# Install node modules
-RUN npm install
+WORKDIR /app
+RUN npm install --legacy-peer-deps
 
 # BUILD CODE
 FROM node:18.20.4-alpine3.20 as builder
 WORKDIR /app
-
 # Copy all project files from the current directory
 COPY . .
-COPY --from=nodemodule /app/src/submodules ./src/submodules
-# Copy node_modules from nodemodule stage
 COPY --from=nodemodule /app/node_modules ./node_modules
 # Build the code
 RUN npm run build
@@ -33,26 +34,22 @@ WORKDIR /app
 LABEL maintainer_name="ybin.nguyen"
 LABEL maintainer_email="nguyenybin2015@gmail.com"
 
-# CÀI ĐẶT MUỐI GIỜ
+# CÀI ĐẶT MÚI GIỜ
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apk update && apk add tzdata
 RUN ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
 
-# Copy built app and necessary files from builder
-COPY --from=builder /app/dist ./
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/ecdsa.key ./keys/ecdsa.key
 COPY --from=builder /app/ecdsa.pub ./keys/ecdsa.pub
-COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/.env ./.env 
 COPY --from=builder /app/run-container.sh ./run-container.sh
+RUN  chmod +x ./run-container.sh 
 COPY --from=builder /app/tsconfig.build.json ./tsconfig.build.json
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
-
-# Copy node_modules from nodemodule stage
 COPY --from=nodemodule /app/node_modules ./node_modules
 
-# Expose the application port
 EXPOSE 3000
 
-# Start the container
 CMD ["/bin/sh", "run-container.sh"]
