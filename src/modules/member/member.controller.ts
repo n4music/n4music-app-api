@@ -22,23 +22,18 @@ export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
   @Get('me')
-  async getMe(@ReqMember() member: Member,  @Res() res: Response) {
+  async getMe(@ReqMember() member: Member, @Res() res: Response) {
     const data = await this.memberService.getDetail(member.id);
     if (!data) {
       throw ErrorHttpException(HttpStatus.NOT_FOUND, 'MEMBER_NOT_FOUND');
     }
-    return SendResponse.success(
-      res,
-      data,
-      'Lấy thông tin thành công!',
-      200,
-    );
+    return SendResponse.success(res, data, 'Lấy thông tin thành công!', 200);
   }
   @Put('me')
   async update(
     @Body() updateDto: UpdateMemberDto,
     @ReqMember() member: Member,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
     const data = await this.memberService.update(updateDto, member.id);
     return SendResponse.success(

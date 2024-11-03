@@ -9,30 +9,28 @@ import { Member } from 'submodules/entities';
 @ApiTags('Auth')
 @Controller('v1/auth')
 export class AuthController {
-	constructor(
-		private authService: AuthService,
-	) {}
+  constructor(private authService: AuthService) {}
 
-	@Public()
-	@Post('sign-in')
-	async signIn(@Body() signInDto: SignInDto) {
-		const result = await this.authService.signIn(signInDto);
-		return result;
-	}
-	@ApiBearerAuth()
-	@Post('logout')
-	async logout(@ReqMember() member: Member) {
-		await this.authService.deleteToken(member);
-		return {
-			success: true,
-			msg: 'Logged out successfully',
-		};
-	}
+  @Public()
+  @Post('sign-in')
+  async signIn(@Body() signInDto: SignInDto) {
+    const result = await this.authService.signIn(signInDto);
+    return result;
+  }
+  @ApiBearerAuth()
+  @Post('logout')
+  async logout(@ReqMember() member: Member) {
+    await this.authService.deleteToken(member);
+    return {
+      success: true,
+      msg: 'Logged out successfully',
+    };
+  }
 
-	@Post('sign-up')
-	@Public()
-	async signUp(@Body() signUpDto: SignUpDto) {
-		const result = await this.authService.signUp(signUpDto);
-		return result;
-	}
+  @Post('sign-up')
+  @Public()
+  async signUp(@Body() signUpDto: SignUpDto) {
+    const result = await this.authService.signUp(signUpDto);
+    return result;
+  }
 }

@@ -71,7 +71,7 @@ export class AuthGuard implements CanActivate {
       this.logger.error(`[authentication] - Not found token`);
       throw new ErrorException(
         HttpStatus.UNAUTHORIZED,
-				401,
+        401,
         'AuthGuard',
         'Not found token',
       );
@@ -92,7 +92,7 @@ export class AuthGuard implements CanActivate {
       if (!member) {
         throw new ErrorException(
           HttpStatus.UNAUTHORIZED,
-					401,
+          401,
           'Authentication Error',
           'payload ',
         );
@@ -100,7 +100,7 @@ export class AuthGuard implements CanActivate {
       if (member.tokenInfo?.app !== token) {
         throw new ErrorException(
           HttpStatus.UNAUTHORIZED,
-					401,
+          401,
           'Authentication Error',
           'token',
         );
@@ -118,7 +118,7 @@ export class AuthGuard implements CanActivate {
       );
       throw new ErrorException(
         HttpStatus.UNAUTHORIZED,
-				401,
+        401,
         'Authentication Error',
         'Invalid token',
       );

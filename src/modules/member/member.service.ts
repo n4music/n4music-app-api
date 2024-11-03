@@ -9,12 +9,7 @@ import {
 import Enum from 'submodules/common/constants';
 import { ErrorHttpException } from 'submodules/common/exceptions/throw.exception';
 import { listResponse } from 'submodules/common/response/response-list.response';
-import {
-  Location,
-  Mediafile,
-  Member,
-  MemberLog,
-} from 'submodules/entities';
+import { Location, Mediafile, Member, MemberLog } from 'submodules/entities';
 import { DataSource, Repository } from 'typeorm';
 import { GetListFormDto, UpdateMemberDto } from './dto/member.dto';
 

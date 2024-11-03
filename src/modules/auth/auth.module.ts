@@ -10,20 +10,17 @@ import { Logger } from 'submodules/logger/logger.service';
 
 @Global()
 @Module({
-	imports: [
-		JwtModule,
-		TypeOrmModule.forFeature([Member, SystemConfig]),
-	],
-	controllers: [AuthController],
-	providers: [
-		{
-			provide: APP_GUARD,
-			useClass: AuthGuard,
-		},
-		AuthService,
-		AuthGuard,
-		Logger,
-	],
-	exports: [AuthGuard, AuthService],
+  imports: [JwtModule, TypeOrmModule.forFeature([Member, SystemConfig])],
+  controllers: [AuthController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    AuthService,
+    AuthGuard,
+    Logger,
+  ],
+  exports: [AuthGuard, AuthService],
 })
 export class AuthModule {}

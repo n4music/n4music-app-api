@@ -57,7 +57,7 @@ export class AuthService {
         'Email này chưa đăng ký tài khoản',
       );
     }
-    console.log("🚀 ~ Au  hService ~ signIn ~ member:", member)
+    console.log('🚀 ~ Au  hService ~ signIn ~ member:', member);
 
     if (member.status !== Enum.Member.STATUS.ACTIVE) {
       throw new ErrorException(
