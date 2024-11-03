@@ -26,4 +26,4 @@ RUN npm install --legacy-peer-deps
 EXPOSE 3000
 
 # RUN APPLICATION
-CMD ["/bin/bash", "run-container-dev.sh"]
+CMD ["/bin/sh", "run-container-dev.sh"]
