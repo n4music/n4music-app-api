@@ -14,7 +14,7 @@ WORKDIR /app
 # COPY PROJECT FILES
 COPY . .
 
-RUN git init
+# RUN git init
 
 # PULL GIT SUBMODULES
 RUN git submodule update --init --recursive
