@@ -1,0 +1,65 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.FILE_ENV }}" > .env
+
+      - name: Create ECDSA key files
+        run: |
+          mkdir -p ./keys
+          echo "${{ secrets.ECDSA_SECRET }}" > ./ecdsa.key
+          echo "${{ secrets.ECDSA_PUBLIC }}" > ./ecdsa.pub
+
+      - name: Build Docker image
+        run: |
+          docker build -t nguyenybin2015/n4music-app-api:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push nguyenybin2015/n4music-app-api:latest
+
+      - name: SSH into VPS and Deploy
+        env:
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+        run: |
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} << 'EOF'
+          
+            APP_NAME="n4music-app-api"
+            ENV_DIR="/.env/$APP_NAME"
+
+            mkdir -p "$ENV_DIR"
+
+            cd "$ENV_DIR"
+
+            if [ ! -f .env ]; then
+              echo "${{ secrets.FILE_ENV }}" > .env
+            fi
+            
+            docker stop $APP_NAME || true
+            docker rm $APP_NAME || true
+
+            docker rmi nguyenybin2015/$APP_NAME:latest || true
+
+            docker pull nguyenybin2015/$APP_NAME:latest
+
+            docker run -it --rm --name $APP_NAME --env-file .env -p 3006:3000 -d nguyenybin2015/$APP_NAME:latest
+          EOF
