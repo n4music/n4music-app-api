@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDate,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   MinLength,
@@ -41,4 +43,19 @@ export class SignUpDto {
   @MinLength(8)
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({ example: 'John Doe' })
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @ApiProperty({ example: '1990-01-01' })
+  @IsDate()
+  @IsOptional()
+  birthday?: Date;
+
+  @ApiProperty({ example: 1 })
+  @IsNumber()
+  @IsOptional()
+  gender?: number;
 }

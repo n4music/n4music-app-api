@@ -11,6 +11,9 @@ import { HealthCheckerModule } from './submodules/health-checker/health-checker.
 import { LoggerModule } from './submodules/logger/logger.module';
 import { Logger } from './submodules/logger/logger.service';
 import { AuthModule } from 'modules/auth/auth.module';
+import { SongModule } from './modules/song/song.module';
+import { PlaylistModule } from './modules/playlist/playlist.module';
+import { AlbumModule } from './modules/album/album.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { AuthModule } from 'modules/auth/auth.module';
     MemberModule,
     SurveyModule,
     LocationModule,
+    SongModule,
+    PlaylistModule,
+    AlbumModule,
   ],
   controllers: [AppController],
   providers: [AppService],

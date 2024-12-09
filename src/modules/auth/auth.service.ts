@@ -41,6 +41,7 @@ export class AuthService {
   }
 
   async signIn({ email, password }: SignInDto) {
+    // console.log(await this.memberRepository.find());
     const member = await new FilterBuilder({
       entityRepo: this.memberRepository,
       alias: 'member',
@@ -132,6 +133,9 @@ export class AuthService {
     const newMember = new Member();
     newMember.email = member.email;
     newMember.password = this.hashPassword(member.password);
+    newMember.name = member.name;
+    newMember.birthday = member.birthday;
+    newMember.gender = member.gender;
     newMember.status = Enum.Member.STATUS.ACTIVE;
     try {
       await this.memberRepository.save(newMember);
