@@ -22,20 +22,11 @@ export class SongService {
       entityRepo: this.songRepository,
       alias: 'songs',
     })
-      .select([
-        'id',
-        'name',
-        'description',
-        'avatar',
-        'type',
-        'status',
-        'meta',
-      ])
+      .select(['id', 'name', 'description', 'avatar', 'type', 'status', 'meta'])
       .addPagination(query?.page, query?.perPage);
 
     // Add relationships
-    filterBuilder.queryBuilder
-      .leftJoinAndSelect('songs.artist', 'artist')
+    filterBuilder.queryBuilder.leftJoinAndSelect('songs.artist', 'artist');
 
     // Admin specific filters
     if (query?.name) {
